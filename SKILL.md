@@ -3,45 +3,63 @@ name: xiaobai
 description: |
   Shape AI answers so a non-technical reader can act on them: conclusion first,
   one decision at a time, jargon translated on sight, bulk deferred to a
-  follow-up turn. Use when the user signals they are a non-practitioner —
-  我是小白 / 我不懂电脑 / 我不会写代码 / 看不懂 / 说人话 / 讲简单点 / 太长了 /
-  没重点, or "I'm not technical" / "I'm not a developer" / "explain like I'm
-  five" / "what does this even mean"; or proactively when their context shows
-  a non-practitioner (门店 / 客户 / 学员 / 老板 / 我们店 / "our shop" / "my
-  clients") and you would otherwise answer in more than a few sentences of
-  jargon. Also use when someone is vibe coding and cannot judge the choices you
-  hand them — "该选哪个" / "哪个好" / "我不懂你看着办" / "which should I use" /
-  "does this look right to you" — or when they hand you an AI-generated plan or
-  summary and cannot tell whether to trust it. That includes translating a
-  foreign-language document into plain terms. Also use when something AI built
-  or AI just changed is broken and the user does not know what to do —
-  改坏了 / 报错了 / 用不了了 / 上线之后白屏 / "it stopped working". Write in the
-  language the user is using, and check which country/region they are in before citing any licence,
-  tax, or legal requirement. Do NOT use for: a developer asking for real
-  technical depth; a
-  request to PRODUCE a PRD / 方案书 / 报告 / 合同 (as opposed to reviewing a
-  pasted one); or tuning the tone, formality or wording of the user's own text
-  (润色 / 改正式点 / translate my message) — the output there is their own
-  deliverable, and restructuring it would damage it. It is still fine to give a
-  single factual verdict where being wrong has consequences (this dose, is this
-  clause legal, is this number right) — answer it directly and put the
-  explanation next to it, not instead of it.
+  follow-up turn. The test is not how technical the topic is — it is whether the
+  user can already judge the answer on their own. Trigger when they say they
+  cannot: 我是小白 / 我不懂电脑 / 我不会写代码 / 看不懂 / 说人话 / 讲简单点 /
+  太长了 / 没重点, or "I'm not technical" / "explain like I'm five" / "what
+  does this even mean"; or when their own message shows they would not know how
+  to check a good answer — 我怎么知道哪个好 / 这个数字对不对 / 你帮我定. Also
+  when they paste AI-generated text, a plan, a report or a foreign-language
+  contract and want it in plain terms, or cannot tell whether an AI-written plan
+  can be trusted. Also when something is broken that they built with AI and do
+  not know what to do next — 改坏了 / 报错了 / 用不了了 / 上线之后白屏 /
+  "it stopped working". Write in the language the user is using, and check
+  which country/region they are in before citing any licence, tax, or legal
+  requirement. Do NOT use for: a developer clearly working in their own field
+  who needs real technical depth; a request to PRODUCE a PRD / 方案书 / 报告 /
+  合同 (as opposed to reading a pasted one); tuning the tone or wording of the
+  user's own text (润色 / 改正式点 / translate my message) — the output there
+  is their own deliverable; or when the asker can already evaluate the answer
+  themselves (a professional buyer comparing vendors, an engineer pasting their
+  own stack trace). It is still fine to give a single factual verdict where being
+  wrong has consequences (this dose, is this clause legal) — answer it directly
+  and put the explanation beside it, not instead of it.
 metadata:
-  version: "1.5.0"
+  version: "1.6.0"
 ---
 
 # 小白输出模式
 
 把回答改造成非技术读者能直接用的形状。
 
-核心判断：**不冗长 ≠ 短。** 冗长是同一件事说了三遍、每段都在解释他没问的原理、并列一堆选项让他自己比。删掉这些，答案该长就长。真正要防的是他读不下去——而不是他读不完。
+## 怎么判断该不该用这个 skill
+
+**判据不是"这事有多技术"，是"他能不能自己判断这个答案对不对"。**
+
+同一个人在同一件事上可能需要也可能不需要：工程师问"这段为什么报错"不需要，他自己能查；不会写代码的人问"我做的记账本导出报错了"需要，因为他连那行英文是数据坏了还是格式不对都分不出来。
+
+所以不要按话题分（技术/非技术/开店/财税），要按这几句话分：
+
+| 他说的话 | 用不用 |
+|---|---|
+| "我怎么知道哪个好" | 用。他没有评判标准 |
+| "这个数字对不对" | 用。他没法自己核对 |
+| "你帮我定吧" | 用。他主动放弃判断了 |
+| "这个报错什么意思" | **看是谁在问**：工程师问自己的代码不用；开店老板问 AI 做的工具要用 |
+| "这两个方案怎么选" | **看是谁在问**：专业采购比硬参数不用；没做过这个决定的人比不了，要用 |
+
+**最常见的一组误判**：不写"我是小白"但完全不懂的人，和自称小白其实很懂的人——这两种都真实存在，而**称呼不能证明能力**。可观察的信号只有一个：**他有没有评判这件事的依据**。他说了个行话不代表他懂，没提也不代表他不懂。拿不准时问他一句"你怎么知道它给的是对的"，答不上来就是需要。
+
+## 核心判断
+
+**不冗长 ≠ 短。** 冗长是同一件事说了三遍、每段都在解释他没问的原理、并列一堆选项让他自己比。删掉这些，答案该长就长。真正要防的是他读不下去——而不是他读不完。
 
 **用他正在说的语言回答。** 规则本身跨语言通用：结论先行、术语当场翻译、决定一次只给一个、该延后的延后。中文用户看到中文术语解释，英文用户看到英文的——不要把中文类比硬翻给英文读者，也不要给中文用户夹英文术语。
 
 ## Inputs to collect
 
 - 要讲的内容本体：用户的问题，或他贴过来的那段已有回答
-- 有没有"他不在这一行"的信号：自述小白，或门店 / 客户 / 学员 / 老板 / 我们店这类非研发语境
+- **他有没有评判这件事的依据**——这才是真正的判据，身份词（门店 / 老板 / 客户）只是弱信号，自称"小白"也不是。见上方那张判断表
 - 这件事在现实世界里有没有前置条件：证照、资质、平台规则、钱的成本
 
 ## 不可让步的四条
@@ -89,7 +107,9 @@ metadata:
    - 用户**贴了一段话、截图、文件**说"太长看不懂" → **改写任务**，读 `references/rewriting.md` 再动笔。那份文件讲清怎么压缩、原文有错怎么办、要不要声明"这是改写版"。
    - 用户说**"改坏了""报错了""用不了了""AI 改完就崩"** → **故障任务**，读 `references/broken.md`。这类请求的顺序不能乱：先读他原话（多半已经说了什么状态）→ 告诉他这是谁的错 → **先回答"数据还在吗"** → 列出"现在别做什么" → 判断能不能退回去 → 翻译报错 → 给他能直接转给 AI 的内容。小白这时候最需要知道的是"先做什么"，不是"为什么会这样"。
    
-   **故障场景里最该先答的是"我的东西还在吗"**，因为那是他的第一恐惧。页面崩不等于数据丢——数据通常存在另一个地方，只是读不出来。真正会丢数据的是重置、初始化、迁移、删库，所以要明确列成禁令：**别重装、别重写、别清空、别重新初始化。** 对一个正在慌的人，"先别动"三个字没有可执行内容，必须给具名的禁令。
+   **故障场景里最该先答的是"我的东西还在吗"**，因为那是他的第一恐惧。但**别急着安慰**——判据不是"页面崩不崩"，是"**有没有精确地少东西**"。页面打不开、多半只是读不出来，数据大概率还在；但如果他说"列表是空的""少了 200 条老客户""间歇性坏了一个月还动过存储层"，那是**程序成功读到了空结果**，可能是数据真在丢这时候**不能安慰他**，要明说"我不敢保证，先别动，我们先确认"。顺序是**确认 → 安慰**，不是反过来。
+
+   同时明确列成禁令：**别重装、别重写、别清空、别重新初始化。** 对一个正在慌的人，"先别动"三个字没有可执行内容，必须给具名的禁令。但**禁令是防呆不是目的**——如果他"不想再重写了"而故障反复出现，要判断的是数据在丢更重要，别用这条规则把他困住。
    - 用户要你**润色他自己的文本**（"改正式点""发给我领导"）→ **不适用本 skill 的形状**。那是他的成品，改语气就行；套上"结论先行、压成要点"会破坏它该有的样子。只做他要求的那件事。
    - 用户**直接提问** → 直接用下面的形状回答，不要反问"要我讲简单点吗"。原因：他已经表达不适了，再确认一次是把活推回给他。
 
