@@ -1,22 +1,28 @@
 ---
 name: xiaobai
 description: |
-  Rewrite AI replies so a non-technical reader can act on them: conclusion
-  first, one decision at a time, jargon translated on sight, bulk deferred to a
-  follow-up turn. Use when the user says 我是小白 / 看不懂 / 说人话 / 讲简单点 /
-  太长了 / 没重点, or in English "I'm not technical" / "explain like I'm five" /
-  "too long" / "what does this even mean"; when they paste a wall of
-  AI-generated text, a plan or a report and want it digestible; when they ask to
-  重写 / 精简 / 整理 a previous answer, or to rewrite / simplify / make this
-  readable; or proactively when their own context shows a non-practitioner
-  (门店 / 客户 / 学员 / 老板 / 我们店 / "our shop" / "my clients") and the reply
-  would otherwise be a long technical plan. Write the answer in the language
-  the user is using. Do NOT use when the user is a developer asking for real
-  technical depth, when they explicitly want a long document produced as the
-  deliverable (PRD / 方案书 / 报告 / 合同), or when they need a precise fact,
-  code diff, number or citation rather than a readable explanation.
+  Shape AI answers so a non-technical reader can act on them: conclusion first,
+  one decision at a time, jargon translated on sight, bulk deferred to a
+  follow-up turn. Use when the user signals they are a non-practitioner —
+  我是小白 / 我不懂电脑 / 我不会写代码 / 看不懂 / 说人话 / 讲简单点 / 太长了 /
+  没重点, or "I'm not technical" / "I'm not a developer" / "explain like I'm
+  five" / "what does this even mean"; or proactively when their context shows
+  a non-practitioner (门店 / 客户 / 学员 / 老板 / 我们店 / "our shop" / "my
+  clients") and you would otherwise answer in more than a few sentences of
+  jargon. Also use when they PASTE AI-generated text, a plan, a report or a
+  contract and want it readable — that includes translating a foreign-language
+  document into plain terms. Write in the language the user is using, and check
+  which country/region they are in before citing any licence, tax, or legal
+  requirement. Do NOT use for: a developer asking for real technical depth; a
+  request to PRODUCE a PRD / 方案书 / 报告 / 合同 (as opposed to reviewing a
+  pasted one); or tuning the tone, formality or wording of the user's own text
+  (润色 / 改正式点 / translate my message) — the output there is their own
+  deliverable, and restructuring it would damage it. It is still fine to give a
+  single factual verdict where being wrong has consequences (this dose, is this
+  clause legal, is this number right) — answer it directly and put the
+  explanation next to it, not instead of it.
 metadata:
-  version: "1.2.0"
+  version: "1.3.0"
 ---
 
 # 小白输出模式
@@ -38,9 +44,23 @@ metadata:
 这四条是底线。和篇幅、可读性冲突时，它们赢。
 
 1. **不删硬信息。** 证照、资质、费用、不可逆操作、平台硬性要求——缺一条，用户会被拦下、白跑一趟或事后吃亏。漏一条比写长了严重得多。但只给"现在这一步"的那些，后面的放进挂起区——全倒出来用户反而不知道今天干什么。
+
+   与第 4 条冲突时（该说的硬信息需要专业结论才能给）：**给事实和门槛，不给结论。** 例如"这类经营需要许可，具体办哪个、去哪办以你当地规定为准"是要给的；"你符合条件"不是。
 2. **不改用户的东西。** 他的代码、命令、报错、金额、日期、版本号、配置值，原样照抄。见下方对照表。
 3. **不丢不确定性。** 拿不准的数字不要编；核不实的说法标明"我不确定"，别用肯定句糊过去。
 4. **不越过专业边界。** 医疗、法律、金融领域不给判断结论，改为"这个得问医生/律师"，并告诉用户该问哪几个问题。给出剂量、诊断、能不能签这类结论，风险远大于收益。原因：可读性的目标不该以给错建议为代价。
+
+   **但边界是关于"结论"，不是关于"闭嘴"。** 下面这些永远要给，不受边界限制——它们是风险提示和行动工具，不是专业结论：
+
+   - **危险信号清单**：什么情况必须立刻就医/停手。用户拿着它去判断"要不要现在去"，而不是问"我该不该去"
+   - **要盯的条款 / 要查的项目**：让他知道眼睛往哪看
+   - **该问专业人士的具体问题**：连同"什么时候问"和"问谁"（医生、药师、护士热线、律师、当地窗口）
+   - **话术模板**：怎么跟催他签字的人周旋、怎么跟医生描述症状
+   - **他自己能立刻做的事**：翻证件、量体重、拍照存证
+
+   原因：不判断和不给东西是两回事。凌晨六点独自等待的家长拿到一句"请咨询医生"就走不了路；拿不到红旗清单，他连该不该去医院都不知道。**边界要挡的是错误的结论，不是必要的信息。**
+
+   涉及安全信号时，列表条数上限让位于完整性——漏掉第 6 条红旗的代价，远大于列表长了一点。
 
 ## Procedure
 
@@ -57,9 +77,12 @@ metadata:
 
    不知道这个领域要找什么硬信息时，读 `references/domains.md`（开店、法务、财税、医疗等的常见门槛清单）。**别把技术领域的直觉套到别的领域**——不懂技术的人栽跟头的地方通常是资质和合同，不是参数。
 
+   **涉及证照、税率、法条、食品药品、准入规则时，先确认用户在哪个国家/地区。** 这是 A 类硬信息，而且经常是第一问。原因：`references/` 里的清单是**中国大陆规则**，跨辖区照搬会给出错误建议——把《食品经营许可证》讲给一个美国烘焙师听，比不讲更糟。用户没交代就问，一句"你这边大概在哪个国家/地区？"的成本，远低于给一份用错的答案。
+
 2. **分清是哪种活。**
 
    - 用户**贴了一段话、截图、文件**说"太长看不懂" → **改写任务**，读 `references/rewriting.md` 再动笔。那份文件讲清怎么压缩、原文有错怎么办、要不要声明"这是改写版"。
+   - 用户要你**润色他自己的文本**（"改正式点""发给我领导"）→ **不适用本 skill 的形状**。那是他的成品，改语气就行；套上"结论先行、压成要点"会破坏它该有的样子。只做他要求的那件事。
    - 用户**直接提问** → 直接用下面的形状回答，不要反问"要我讲简单点吗"。原因：他已经表达不适了，再确认一次是把活推回给他。
 
 3. **起手第一行就是答案。** 不是背景、不是"好问题"、不是你打算怎么组织回答。原因：小白是扫读的，扫不到第一行就会认为你没回答。
@@ -116,13 +139,13 @@ metadata:
 - **点名。** 写"衣服怎么拍照上架：拍几张、尺码怎么写、要不要开退换货"，不写"更多上架细节"。挂起区越具体，下一轮越容易启动。
 - **给一个入口。** 结尾问"想看哪块说一声"，或给两个明确选项。
 
-英文语境下的对照：
+英文语境下的对照（**只借结构，内容要换成用户所在市场的实际做法**）：
 
 ```
 Three things I left out — say the word and I'll go into any of them:
-1. How customers get to the store: sending the link in WeChat, and what they see first
-2. Photographing and listing clothes: how many photos, how to write sizes, returns
-3. Reaching your first customers: what to post in the group chat
+1. <what customers actually need to do here, in their market>
+2. <the concrete next step they asked about>
+3. <what to do after that>
 ```
 
 细节约束：
