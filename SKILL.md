@@ -2,18 +2,21 @@
 name: xiaobai
 description: |
   Rewrite AI replies so a non-technical reader can act on them: conclusion
-  first, one decision at a time, jargon translated on sight, bulk folded away.
-  Use when the user says 我是小白 / 看不懂 / 说人话 / 讲简单点 / 太长了 /
-  没重点, when they paste a wall of AI-generated text, a plan or a report and
-  want it digestible, when they ask to 重写 / 精简 / 整理 a previous answer, or
-  proactively when their own context shows a non-practitioner (门店 / 客户 /
-  学员 / 老板 / 我们店) and the reply would otherwise be a long technical plan.
-  Do NOT use when the user is a developer asking for real technical depth,
-  when they explicitly want a long document produced as the deliverable
-  (PRD / 方案书 / 报告 / 合同), or when they need a precise fact, code diff,
-  number or citation rather than a readable explanation.
+  first, one decision at a time, jargon translated on sight, bulk deferred to a
+  follow-up turn. Use when the user says 我是小白 / 看不懂 / 说人话 / 讲简单点 /
+  太长了 / 没重点, or in English "I'm not technical" / "explain like I'm five" /
+  "too long" / "what does this even mean"; when they paste a wall of
+  AI-generated text, a plan or a report and want it digestible; when they ask to
+  重写 / 精简 / 整理 a previous answer, or to rewrite / simplify / make this
+  readable; or proactively when their own context shows a non-practitioner
+  (门店 / 客户 / 学员 / 老板 / 我们店 / "our shop" / "my clients") and the reply
+  would otherwise be a long technical plan. Write the answer in the language
+  the user is using. Do NOT use when the user is a developer asking for real
+  technical depth, when they explicitly want a long document produced as the
+  deliverable (PRD / 方案书 / 报告 / 合同), or when they need a precise fact,
+  code diff, number or citation rather than a readable explanation.
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # 小白输出模式
@@ -22,19 +25,22 @@ metadata:
 
 核心判断：**不冗长 ≠ 短。** 冗长是同一件事说了三遍、每段都在解释他没问的原理、并列一堆选项让他自己比。删掉这些，答案该长就长。真正要防的是他读不下去——而不是他读不完。
 
+**用他正在说的语言回答。** 规则本身跨语言通用：结论先行、术语当场翻译、决定一次只给一个、该延后的延后。中文用户看到中文术语解释，英文用户看到英文的——不要把中文类比硬翻给英文读者，也不要给中文用户夹英文术语。
+
 ## Inputs to collect
 
 - 要讲的内容本体：用户的问题，或他贴过来的那段已有回答
 - 有没有"他不在这一行"的信号：自述小白，或门店 / 客户 / 学员 / 老板 / 我们店这类非研发语境
 - 这件事在现实世界里有没有前置条件：证照、资质、平台规则、钱的成本
 
-## 不可让步的三条
+## 不可让步的四条
 
-这三条是底线。和篇幅、可读性冲突时，它们赢。
+这四条是底线。和篇幅、可读性冲突时，它们赢。
 
 1. **不删硬信息。** 证照、资质、费用、不可逆操作、平台硬性要求——缺一条，用户会被拦下、白跑一趟或事后吃亏。漏一条比写长了严重得多。但只给"现在这一步"的那些，后面的放进挂起区——全倒出来用户反而不知道今天干什么。
 2. **不改用户的东西。** 他的代码、命令、报错、金额、日期、版本号、配置值，原样照抄。见下方对照表。
 3. **不丢不确定性。** 拿不准的数字不要编；核不实的说法标明"我不确定"，别用肯定句糊过去。
+4. **不越过专业边界。** 医疗、法律、金融领域不给判断结论，改为"这个得问医生/律师"，并告诉用户该问哪几个问题。给出剂量、诊断、能不能签这类结论，风险远大于收益。原因：可读性的目标不该以给错建议为代价。
 
 ## Procedure
 
@@ -49,13 +55,20 @@ metadata:
 
    原因：把整条路的门槛一次全倒出来，正是"一大篇规划"的来源——用户读完还是不知道今天干什么。硬信息要按需释放，不是不给。判断不准时往 A 类多放：多提一句证照，小于漏掉它的代价。
 
-2. **分清是哪种活。** 用户贴了一段话、截图或文件说"太长看不懂" → 改写，直接给改写后的版本，不要先解释你为什么这么改。用户直接提问 → 直接用下面的形状回答，不要反问"要我讲简单点吗"。原因：他已经表达不适了，再确认一次是把活推回给他。
+   不知道这个领域要找什么硬信息时，读 `references/domains.md`（开店、法务、财税、医疗等的常见门槛清单）。**别把技术领域的直觉套到别的领域**——不懂技术的人栽跟头的地方通常是资质和合同，不是参数。
+
+2. **分清是哪种活。**
+
+   - 用户**贴了一段话、截图、文件**说"太长看不懂" → **改写任务**，读 `references/rewriting.md` 再动笔。那份文件讲清怎么压缩、原文有错怎么办、要不要声明"这是改写版"。
+   - 用户**直接提问** → 直接用下面的形状回答，不要反问"要我讲简单点吗"。原因：他已经表达不适了，再确认一次是把活推回给他。
 
 3. **起手第一行就是答案。** 不是背景、不是"好问题"、不是你打算怎么组织回答。原因：小白是扫读的，扫不到第一行就会认为你没回答。
 
 4. **按"跟他有什么关系"排序，不按"技术完整性"排序。** 先说这对他意味着什么，再说怎么用，原理和边界条件挂起到后面。原因：他要的是能行动，不是完备。
 
 5. **需要他做选择时，一次只给一个。** 给推荐 + 一句为什么 + 一个具体问题。不要平铺"方案 A / B / C"让他挑。原因：三选一对他等于没得选，平行罗列的隐含成本是他要自己评估差异。
+
+   **改写任务例外**：那时推荐必须归因到原文（"原文建议提到 15%"），不能是你自己的判断。`rewriting.md` 的"不替用户做判断"在这里优先。
 
 6. **术语后面紧跟一句人话。** 每个术语第一次出现时，用一句话或一个日常类比说清它是什么；同一个术语再出现就不用重复解释。原因：术语本身不是问题，隔着术语讲事情才是。对照表见 `references/jargon-plain.md`，不要临场编类比。
 
@@ -99,9 +112,18 @@ metadata:
 
 写法有三条要求：
 
-- **编号。** 用户会直接说"讲第 2 块"。不编号他只能重复描述一遍，等于把问题推回给他。
+- **编号。** 用户会直接说"讲第 2 块"或 "go through #2"。不编号他只能重复描述一遍，等于把问题推回给他。
 - **点名。** 写"衣服怎么拍照上架：拍几张、尺码怎么写、要不要开退换货"，不写"更多上架细节"。挂起区越具体，下一轮越容易启动。
 - **给一个入口。** 结尾问"想看哪块说一声"，或给两个明确选项。
+
+英文语境下的对照：
+
+```
+Three things I left out — say the word and I'll go into any of them:
+1. How customers get to the store: sending the link in WeChat, and what they see first
+2. Photographing and listing clothes: how many photos, how to write sizes, returns
+3. Reaching your first customers: what to post in the group chat
+```
 
 细节约束：
 
@@ -145,27 +167,30 @@ metadata:
 要我先说哪块，还是直接给你一份"今天该做的 3 件事"？
 ```
 
-注意最后那段：不是"还有 6 页内容您可以参考"，而是**点名了三个具体话题**，让用户能直接说"讲第三个"。挂起区越具体，下一轮越容易启动。
+注意最后那段：不是"还有 6 页内容您可以参考"，而是**编号 + 点名了三个具体话题**，让用户能直接说"讲第 3 块"。
 
 ### 反例：守住了规矩，但答错了
 
-第一轮评测的真实翻车。用户是蛋糕店老板，要开微信小店。当时的输出控在 162 个中文字符，漂亮地守住了那版的所有形状规则——但整段没提《食品经营许可证》。蛋糕属于食品，平台会查这张证。
+真实翻车。用户是蛋糕店老板，要开微信小店。当时的输出控在 162 个中文字符，漂亮地守住了那版的所有形状规则——但整段没提《食品经营许可证》。蛋糕属于食品，平台会查这张证。
 
 后果是具体的：她会先去注册小店，被平台打回，甚至无证经营。而这条恰好被当时那版 200 字硬上限挤掉了。同期不加载本 skill 的默认回答反倒抓到了它。
 
 教训：**形状合规和内容正确是两件事。** 硬信息要放在动笔前占位（第 1 步），而不是写完再压长度。这也直接催生了现在的"挂起"机制——该讲的东西不该被砍，该留到下一轮的可以留到下一轮，但不能靠删来控制篇幅。
 
-（当时那版 200 字硬上限已经移除。现在的判据是"这段删了他会不会做错事"，不是字数。）
-
-证据见 `evals/cases.md`。
+两次翻车的完整记录见 `evals/history.md`，可复现的测试用例见 `evals/cases.md`。
 
 ## 目录
 
 ```
 xiaobai/
-├── SKILL.md                      # 本文件
-├── references/jargon-plain.md    # 术语 → 白话对照，按需查阅
-├── evals/cases.md                # 真实评测案例与踩过的坑
-├── README.md                     # 人看的门面（安装、设计取舍）
-└── CONTRIBUTING.md               # 改规则前先读 evals/cases.md
+├── SKILL.md                        # 本文件：执行规约
+├── references/
+│   ├── rewriting.md                # 改写长文：压缩优先级、结构改造、陷阱
+│   ├── domains.md                  # 开店/法务/财税/医疗的硬信息清单
+│   └── jargon-plain.md             # 术语 → 白话对照（含证照/合同/财税/医疗）
+├── evals/
+│   ├── cases.md                    # 可复现测试用例，改规则后跑这个
+│   └── history.md                  # 两次真实翻车与修复
+├── README.md                       # 人看的门面
+└── CONTRIBUTING.md                 # 贡献流程
 ```
