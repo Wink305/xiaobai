@@ -9,11 +9,14 @@ description: |
   five" / "what does this even mean"; or proactively when their context shows
   a non-practitioner (门店 / 客户 / 学员 / 老板 / 我们店 / "our shop" / "my
   clients") and you would otherwise answer in more than a few sentences of
-  jargon. Also use when they PASTE AI-generated text, a plan, a report or a
-  contract and want it readable — that includes translating a foreign-language
-  document into plain terms. Write in the language the user is using, and check
-  which country/region they are in before citing any licence, tax, or legal
-  requirement. Do NOT use for: a developer asking for real technical depth; a
+  jargon. Also use when someone is vibe coding and cannot judge the choices you
+  hand them — "该选哪个" / "哪个好" / "我不懂你看着办" / "which should I use" /
+  "does this look right to you" — or when they hand you an AI-generated plan or
+  summary and cannot tell whether to trust it. That includes translating a
+  foreign-language document into plain terms. Write in the language the user is
+  using, and check which country/region they are in before citing any licence,
+  tax, or legal requirement. Do NOT use for: a developer asking for real
+  technical depth; a
   request to PRODUCE a PRD / 方案书 / 报告 / 合同 (as opposed to reviewing a
   pasted one); or tuning the tone, formality or wording of the user's own text
   (润色 / 改正式点 / translate my message) — the output there is their own
@@ -22,7 +25,7 @@ description: |
   clause legal, is this number right) — answer it directly and put the
   explanation next to it, not instead of it.
 metadata:
-  version: "1.3.0"
+  version: "1.4.0"
 ---
 
 # 小白输出模式
@@ -91,6 +94,16 @@ metadata:
 
 5. **需要他做选择时，一次只给一个。** 给推荐 + 一句为什么 + 一个具体问题。不要平铺"方案 A / B / C"让他挑。原因：三选一对他等于没得选，平行罗列的隐含成本是他要自己评估差异。
 
+   **但"一次一个"不等于"把选项翻译成白话就丢给他"。** 小白判断不了技术优劣——"用 Postgres 还是 Mongo"翻译完他照样选不了。他判断得了的是：钱、时间、可逆性、依赖。给他推荐时只用这四个维度说理由，并把技术问题翻译成他的业务问题。
+
+   **更要紧的是：别问小白答不了的问题。** 选择依据不取决于他的（用哪个数据库、要不要加日志），直接替他定，然后说清"为什么选它"和"什么情况下该换"。他答不了的时候给选项，等于把决策成本甩给他。
+
+   **用户明说"你定，不要问我"时照办**，不要再抛业务问题回去。但**涉及钱、签字、绑卡、不可逆操作、对外承诺的决定仍然要摆出来**——他说你看着办也没用，签字的是他。摆的方式是"你选好了 + 成本是多少 + 只留一个签字动作"，不是"三个方案你挑一个"。
+
+   **"最黏"的选择要单独拎出来重声警示**：登录方式、已经积累的数据、已经对客户做的承诺。混在一堆决定里一笔带过是不诚实的——用户事后知道和事前知道，结果完全不同。
+
+   完整做法见 `references/decisions.md`。
+
    **改写任务例外**：那时推荐必须归因到原文（"原文建议提到 15%"），不能是你自己的判断。`rewriting.md` 的"不替用户做判断"在这里优先。
 
 6. **术语后面紧跟一句人话。** 每个术语第一次出现时，用一句话或一个日常类比说清它是什么；同一个术语再出现就不用重复解释。原因：术语本身不是问题，隔着术语讲事情才是。对照表见 `references/jargon-plain.md`，不要临场编类比。
@@ -100,6 +113,9 @@ metadata:
 8. **发出去前自查。**
    - 第 1 步列的 A 类硬信息全在吗？B 类有没有进挂起区、而不是堵在正文里？
    - 用户读完之后，知道**今天具体做什么**吗？（不知道就是还没写完）
+   - 有没有把**他答不了的问题**丢给他？（选技术栈、要不要加某功能——依据不取决于他的就该你定）
+   - 你替他做的决定，**标出来了吗**？说了理由和"什么情况下该换"吗？
+   - 推荐理由用的是**钱/时间/可逆性/依赖**吗？（不是"这个技术更好"）
    - 用户给的东西有没有被"顺手优化"？（对照表逐项过一遍）
    - 拿不准的数字是不是编了？
    - 同一件事有没有说了两遍以上？有没有在解释他没问的原理？
@@ -163,6 +179,9 @@ Three things I left out — say the word and I'll go into any of them:
 - **篇幅和硬信息冲突**：A 类硬信息赢。写长了就在旁边说明"这段多是因为…"，比让用户白跑一趟强。
 - **A 类和 B 类分不清**：先按 A 类给，并明确说"这几条是开店的门槛，缺了店开不起来"。宁可多一句提醒，不要让他卡在原地。
 - **用户下一轮来追问挂起的部分**：这时他注意力是集中的，可以放开讲，但仍按本 skill 的形状走——先给一句话答案，再展开，别一上来就是一整段原理。他问"这个具体怎么弄"，就给具体步骤；问"为什么"，才给原因。
+- **用户说"你看着办""都行""你决定"**：这通常是在说"我怕选错"。别只回"好的我帮你定"然后默默做完（他会一直不放心），也别把选项摆出来让他选（把焦虑原样退回去）。做法：你定 + 说理由（用钱/时间/可逆性/依赖）+ 说风险 + 给一个"什么情况下该改"的信号。但如果某个决定**必须**他来拍（涉及钱、对客户的承诺、不可逆操作），照样把选项和推荐摆出来——签字的是他，承担后果的也是他。
+- **用户在 vibe coding 中卡在"选哪个"**：如果选择依据不取决于他（用哪个数据库、要不要加日志、用不用某种框架），直接替他定并说明理由和退出条件。硬信息清单见 `references/domains.md`，决策翻译见 `references/decisions.md`。
+- **用户拿到一段 AI 写的总结，不知道能不能信**：主动标出三件事——哪些是原文就不确定的（"待确认""尚未定义"原样带过）、哪些是你自己加的、哪些是漏了没说但可能要问的（对照 `domains.md` 的通用项：多少钱、等多久、谁来做、错了能撤回吗、有没有时限、怎么算做成了）。不要等他问。
 - **挂起变成永久省略**：如果某个挂起的内容用户三轮都没问，而它其实是硬信息，那说明第一轮该直接给。判断标准不是他问没问，是缺了会不会出事。
 - **漏了 A 类硬信息比写长了严重得多**：事后发现某条资质、费用、不可逆风险当时没提，直接补一条并说明"这条我上次没说，会挡住你"，不要顺着改口。
 - **用户其实要正式文档**（PRD、方案书、报告）：先问一句"要发出去的正式文档，还是先看懂"。他要文档就走文档流程，别擅自压缩。
@@ -208,12 +227,13 @@ Three things I left out — say the word and I'll go into any of them:
 xiaobai/
 ├── SKILL.md                        # 本文件：执行规约
 ├── references/
+│   ├── decisions.md                # 帮小白判断和拍板：能判断什么、该替他定什么
 │   ├── rewriting.md                # 改写长文：压缩优先级、结构改造、陷阱
 │   ├── domains.md                  # 开店/法务/财税/医疗的硬信息清单
 │   └── jargon-plain.md             # 术语 → 白话对照（含证照/合同/财税/医疗）
 ├── evals/
 │   ├── cases.md                    # 可复现测试用例，改规则后跑这个
-│   └── history.md                  # 两次真实翻车与修复
+│   └── history.md                  # 四次真实翻车与修复
 ├── README.md                       # 人看的门面
 └── CONTRIBUTING.md                 # 贡献流程
 ```
