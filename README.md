@@ -341,17 +341,18 @@ vibe coding 是长对话，小白最烦的不是听不懂，是**每次都要重
 xiaobai/
 ├── SKILL.md                          # 每轮都要用的规则（293 行）
 ├── references/                       # 按需读，别一次全读
+│   ├── live-change.md                # 改别人每天在用的东西：红线、损害落到别人身上
 │   ├── platform-rules.md             # 技术上能做≠可以做：封号、条款、抓数据
 │   ├── shipping.md                   # 做东西发给别人：钱、隐私、许可证、签名、分发
 │   ├── intent.md                     # 愿望不是需求：怎么帮他想清楚
 │   ├── remembering.md                # 跨轮偏好记忆：别问第二遍
-│   ├── decisions.md                  # 帮小白判断和拍板
+│   ├── decisions.md                  # 帮小白判断和拍板（含"跑不跑得动"第五维）
 │   ├── broken.md                     # AI 改坏了：先做什么、能不能退
 │   ├── rewriting.md                  # 改写长文的压缩优先级与陷阱
 │   ├── round-two.md                  # 用户追问挂起项时的形状
 │   ├── rationalizing.md              # 绕过规则时的原话与反驳
 │   ├── domains.md                    # 开店/法务/财税/医疗的硬信息清单
-│   └── jargon-plain.md               # 术语 → 白话对照（12 节）
+│   └── jargon-plain.md               # 术语 → 白话对照（13 节）
 ├── evals/
 │   ├── cases.md                      # 10 组可复现测试用例
 │   ├── baseline-3cases.md            # baseline 原始输出（证明价值在哪）
