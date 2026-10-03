@@ -278,21 +278,26 @@ vibe coding 是长对话，小白最烦的不是听不懂，是**每次都要重
 
 ```
 xiaobai/
-├── SKILL.md                          # 执行规约本体
-├── references/
-│   ├── intent.md                     # 他给的是愿望不是需求：怎么帮他想清楚
+├── SKILL.md                          # 每轮都要用的规则（293 行）
+├── references/                       # 按需读，别一次全读
+│   ├── intent.md                     # 愿望不是需求：怎么帮他想清楚
 │   ├── remembering.md                # 跨轮偏好记忆：别问第二遍
 │   ├── decisions.md                  # 帮小白判断和拍板
 │   ├── broken.md                     # AI 改坏了：先做什么、能不能退
 │   ├── rewriting.md                  # 改写长文的压缩优先级与陷阱
+│   ├── round-two.md                  # 用户追问挂起项时的形状
+│   ├── rationalizing.md              # 绕过规则时的原话与反驳
 │   ├── domains.md                    # 开店/法务/财税/医疗的硬信息清单
 │   └── jargon-plain.md               # 术语 → 白话对照（7 类）
 ├── evals/
-│   ├── cases.md                      # 可复现测试用例
-│   └── history.md                    # 五次真实翻车与修复
+│   ├── cases.md                      # 10 组可复现测试用例
+│   ├── baseline-3cases.md            # baseline 原始输出（证明价值在哪）
+│   └── history.md                    # 十次真实翻车与修复
 ├── CONTRIBUTING.md
 └── LICENSE
 ```
+
+**SKILL.md 只放"每轮都要用"的**——四条底线、判据表、Output shape、self-check。任务专属的规则都在 `references/`，按他说了什么去读。理由是 SKILL.md 触发时全量进 context，留在主文件的每一行都是每轮的成本。
 
 ## 设计取舍
 
