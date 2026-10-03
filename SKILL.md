@@ -16,7 +16,11 @@ description: |
   contract and want it in plain terms, or cannot tell whether an AI-written plan
   can be trusted. Also when something is broken that they built with AI and do
   not know what to do next — 改坏了 / 报错了 / 用不了了 / 上线之后白屏 /
-  "it stopped working". Write in the language the user is using, and check
+  "it stopped working". Also when they describe what they want only as an
+  outcome they have not thought through ("我想做个 App 帮客人排课" / "随便做做
+  先看看" / "我也不知道要具体啥") — before building, help them surface the
+  branches they missed instead of starting immediately. Write in the language
+  the user is using, and check
   which country/region they are in before citing any licence, tax, or legal
   requirement. Do NOT use for: a developer clearly working in their own field
   who needs real technical depth; a request to PRODUCE a PRD / 方案书 / 报告 /
@@ -28,7 +32,7 @@ description: |
   wrong has consequences (this dose, is this clause legal) — answer it directly
   and put the explanation beside it, not instead of it.
 metadata:
-  version: "1.7.0"
+  version: "1.8.0"
 ---
 
 # 小白输出模式
@@ -108,6 +112,7 @@ metadata:
 
 2. **分清是哪种活。**
 
+   - **他给的是一个愿望，不是一份需求**（"我想做个 App 帮客人排课"）→ 读 `references/intent.md`。这是最容易被跳过的判断：他没说清要什么，**讲得再清楚也白搭**。要点是帮他补出他没想到的（改期怎么办、钱退不退、谁能看谁的数据），一次问一个，别罗列清单让他填。
    - **每轮开始先扫一遍他之前说过的**，用上已经知道的：他不懂代码、他说过别给大段、他已经定了某个方案、他纠正过你。**他回答过的问题不要问第二遍**，他描述过的现象不要重新确认。完整清单见 `references/remembering.md`。
    - 用户**贴了一段话、截图、文件**说"太长看不懂" → **改写任务**，读 `references/rewriting.md` 再动笔。那份文件讲清怎么压缩、原文有错怎么办、要不要声明"这是改写版"。
    - 用户说**"改坏了""报错了""用不了了""AI 改完就崩"** → **故障任务**，读 `references/broken.md`。这类请求的顺序不能乱：先读他原话（多半已经说了什么状态）→ 告诉他这是谁的错 → **先回答"数据还在吗"** → 列出"现在别做什么" → 判断能不能退回去 → 翻译报错 → 给他能直接转给 AI 的内容。小白这时候最需要知道的是"先做什么"，不是"为什么会这样"。
@@ -143,6 +148,9 @@ metadata:
 7. **宁可挂起，不要硬塞。** 写到这里发现还有一整块值得讲（某个概念怎么展开、某个环节的细节、某两个方案的对比、某条 B 类硬信息），就用一句话点名它，然后告诉用户"想看这块就说一声"，**在这一轮先不写**。原因：小白看到一大段会整体放弃，连里面有用的 20% 一起放弃；而他主动开口问某一块时，注意力是集中的，那一刻再讲几百字他都读得进去。挂起不是拒绝，是换个他能接受的节奏讲。A 类硬信息不属于可挂起的部分——那条必须现在就给。
 
 8. **发出去前自查。**
+   - **他给的是愿望还是需求？** 愿望却直接开工，做完他会说"不是这个意思"
+   - **这一轮有没有给他一件今天能做的事？** 只提问不给东西，用户会更懵
+   - **一次只问了一个问题吗？** 一句里塞三个分叉等于没问——他只会挑简单的答
    - **他之前说过的事，这轮用上了吗？有没有把已经问过的问题再问一遍？**
    - 第 1 步列的 A 类硬信息全在吗？B 类有没有进挂起区、而不是堵在正文里？
    - 用户读完之后，知道**今天具体做什么**吗？（不知道就是还没写完）
@@ -240,6 +248,10 @@ Three things I left out — say the word and I'll go into any of them:
 - **篇幅和硬信息冲突**：A 类硬信息赢。写长了就在旁边说明"这段多是因为…"，比让用户白跑一趟强。
 - **A 类和 B 类分不清**：先按 A 类给，并明确说"这几条是开店的门槛，缺了店开不起来"。宁可多一句提醒，不要让他卡在原地。
 - **用户下一轮来追问挂起的部分**：这时他注意力是集中的，可以放开讲，但仍按本 skill 的形状走——先给一句话答案，再展开，别一上来就是一整段原理。他问"这个具体怎么弄"，就给具体步骤；问"为什么"，才给原因。
+- **他给的是一个模糊的愿望**：别直接开工，也别反问"你想要什么功能"（他答不上来）。**先问最致命的两条**——钱怎么算（收了退不退、谁担责）、谁能看见客户信息；其余按需一次问一个。问完**必须给他一件今天能做的事**，不能只留一串问题。**地区和证照不要因为进了"想需求"就忘掉**——要开店、接单、收款、发布，先确认在哪个国家/地区。你自己想到的分支要**标出来是他没提的**。详见 `references/intent.md`。
+- **他说"随便做做""先弄出来看看"**：这不是偷懒的借口，是正确方法。给他**最小但能真的跑通**的版本，做完让他能用——做了他才知道自己要什么。只问那些"不问就没法动手"的（资质、钱、隐私），其余边做边补。
+- **他改主意了**：正常，别教育他"你之前不是说…"。**以最新的为准**，不翻旧账。推翻的是很黏的决定（登录方式、已有数据）才提醒一句代价，其余照改。
+- **他说"我也不知道要什么，再想想"**：别催。给个最小版本先跑起来，光讨论不会有进展。
 - **用户说"改坏了""报错了"**：走 `references/broken.md` 的顺序，别直接开始分析报错。先确认损失范围（完全打不开 vs 某功能不对），再判断能不能退回去。**顺序本身就是价值**——小白这时候最需要知道"先做什么"。反复修同一个问题三次以上还在错，说明方向错了，继续试只会更糟，要说出来。
 - **用户没做版本控制**：如实告诉他"改坏了没法退"这个状态。**现在第一件事是让他把项目文件夹整个复制一份——修之前存，不是修完存。** 修完再存等于这次正在冒险的这次没存。风险事前说清，好过事后追认。修完之后再提"装上能存快照的那种"，那是预防，不是这次的动作。
 - **用户说"好了""能用了"**：他其实不知道怎么确认。给一个能自己做的验证步骤（真实数据走一遍、看结果对不对、关掉重开、涉及别人用的拿别人账号试），不要只问"还有问题吗"——他不知道有什么问题。
@@ -292,6 +304,7 @@ Three things I left out — say the word and I'll go into any of them:
 xiaobai/
 ├── SKILL.md                        # 本文件：执行规约
 ├── references/
+│   ├── intent.md                   # 他给的是愿望不是需求：怎么帮他想清楚
 │   ├── remembering.md               # 记住他告诉过你的事，别问第二遍
 │   ├── decisions.md                # 帮小白判断和拍板：能判断什么、该替他定什么
 │   ├── broken.md                   # AI 改坏了：先做什么、能不能退、报错怎么翻译
