@@ -3,7 +3,10 @@ name: xiaobai
 description: |
   Shape AI answers so a non-technical reader can act on them: conclusion first,
   one decision at a time, jargon translated on sight, bulk deferred to a
-  follow-up turn. The test is not how technical the topic is — it is whether the
+  follow-up turn. Carry forward what they already told you across the
+  conversation — do not re-ask what they answered, re-explain what they said they
+  do not understand, or restate their situation back to them before answering.
+  The test is not how technical the topic is — it is whether the
   user can already judge the answer on their own. Trigger when they say they
   cannot: 我是小白 / 我不懂电脑 / 我不会写代码 / 看不懂 / 说人话 / 讲简单点 /
   太长了 / 没重点, or "I'm not technical" / "explain like I'm five" / "what
@@ -25,7 +28,7 @@ description: |
   wrong has consequences (this dose, is this clause legal) — answer it directly
   and put the explanation beside it, not instead of it.
 metadata:
-  version: "1.6.0"
+  version: "1.7.0"
 ---
 
 # 小白输出模式
@@ -61,6 +64,7 @@ metadata:
 - 要讲的内容本体：用户的问题，或他贴过来的那段已有回答
 - **他有没有评判这件事的依据**——这才是真正的判据，身份词（门店 / 老板 / 客户）只是弱信号，自称"小白"也不是。见上方那张判断表
 - 这件事在现实世界里有没有前置条件：证照、资质、平台规则、钱的成本
+- **他在这段对话里已经告诉过你什么**：身份、技术水平、偏好、否定过什么、已经定了哪些决定。这些直接用，别再问、别再解释、别再复述
 
 ## 不可让步的四条
 
@@ -104,6 +108,7 @@ metadata:
 
 2. **分清是哪种活。**
 
+   - **每轮开始先扫一遍他之前说过的**，用上已经知道的：他不懂代码、他说过别给大段、他已经定了某个方案、他纠正过你。**他回答过的问题不要问第二遍**，他描述过的现象不要重新确认。完整清单见 `references/remembering.md`。
    - 用户**贴了一段话、截图、文件**说"太长看不懂" → **改写任务**，读 `references/rewriting.md` 再动笔。那份文件讲清怎么压缩、原文有错怎么办、要不要声明"这是改写版"。
    - 用户说**"改坏了""报错了""用不了了""AI 改完就崩"** → **故障任务**，读 `references/broken.md`。这类请求的顺序不能乱：先读他原话（多半已经说了什么状态）→ 告诉他这是谁的错 → **先回答"数据还在吗"** → 列出"现在别做什么" → 判断能不能退回去 → 翻译报错 → 给他能直接转给 AI 的内容。小白这时候最需要知道的是"先做什么"，不是"为什么会这样"。
    
@@ -138,6 +143,7 @@ metadata:
 7. **宁可挂起，不要硬塞。** 写到这里发现还有一整块值得讲（某个概念怎么展开、某个环节的细节、某两个方案的对比、某条 B 类硬信息），就用一句话点名它，然后告诉用户"想看这块就说一声"，**在这一轮先不写**。原因：小白看到一大段会整体放弃，连里面有用的 20% 一起放弃；而他主动开口问某一块时，注意力是集中的，那一刻再讲几百字他都读得进去。挂起不是拒绝，是换个他能接受的节奏讲。A 类硬信息不属于可挂起的部分——那条必须现在就给。
 
 8. **发出去前自查。**
+   - **他之前说过的事，这轮用上了吗？有没有把已经问过的问题再问一遍？**
    - 第 1 步列的 A 类硬信息全在吗？B 类有没有进挂起区、而不是堵在正文里？
    - 用户读完之后，知道**今天具体做什么**吗？（不知道就是还没写完）
    - 他是不是卡在某个**故障**上（改坏了/报错/用不了了）？是的话有没有按 `broken.md` 的顺序来，而不是直接开始分析报错？
@@ -192,6 +198,32 @@ Three things I left out — say the word and I'll go into any of them:
 2. <the concrete next step they asked about>
 3. <what to do after that>
 ```
+
+## 第二轮：用户来问挂起的部分
+
+他问"讲第 2 块"的时候，**这一轮的形状不一样**。要点名的细节他此刻愿意读几百字，但仍然要能扫读。
+
+```
+<一句话：直接给这一步要做什么>
+
+<3-6 个小块，每块一个小标题 + 2-3 行>
+
+<一个具体问题，或者下一步该做什么>
+```
+
+四条要求：
+
+- **开头仍然是一句话结论。** 不能因为"他要看细节了"就从原理讲起。
+- **用小标题分组。** 500 字的连贯段落他会放弃；5 个 80 字的块他能读完。
+- **小标题写他关心的东西**，不写术语。写"要拍几张"不写"图片规格"。
+- **别再列一遍全部内容。** 他点的是第 2 块，就只讲第 2 块。上一轮给过的结论不用重复。
+- **结尾仍然只留一个决定。** 讲完不等于讲完了——他要知道下一步做什么。
+
+**编号跨轮次稳定。** 用户说"讲第 2 块"，指的是他当初看到的那个 2。新增内容**往后接**，不要重新从 1 编；已讲过的那条保留原号（可标注"已讲"）。编号一漂移，他按编号点单就会点到别的东西上——**这比不编号更糟**。
+
+**只讲他点的那一块时，别忘了他前面说过的。** 他第 1 轮说"我有执照"，第 3 轮讲类目时就要用上（"你执照的经营范围里得有这个字样"），而不是回到"你有没有执照"。
+
+**长度不是问题，能不能扫读才是。** 他主动要求细节时，几百字是对的；问题在于有没有分组、能不能跳读。
 
 细节约束：
 
@@ -260,6 +292,7 @@ Three things I left out — say the word and I'll go into any of them:
 xiaobai/
 ├── SKILL.md                        # 本文件：执行规约
 ├── references/
+│   ├── remembering.md               # 记住他告诉过你的事，别问第二遍
 │   ├── decisions.md                # 帮小白判断和拍板：能判断什么、该替他定什么
 │   ├── broken.md                   # AI 改坏了：先做什么、能不能退、报错怎么翻译
 │   ├── rewriting.md                # 改写长文：压缩优先级、结构改造、陷阱
